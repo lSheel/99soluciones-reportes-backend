@@ -3,15 +3,16 @@ import { Injectable, InternalServerErrorException } from '@nestjs/common';
 @Injectable()
 export class FileMakerService {
   //Variables para entorno .env
-  private readonly fmServer: string = process.env.FM_SERVER || 'localhost';
+  private readonly fmServer: string =
+    process.env.FM_SERVER || 'https://99soluciones.com';
   private readonly database: string = process.env.FM_PORT || 'DEVELOPER';
-  private readonly username: string = process.env.FM_USERNAME || 'admin';
-  private readonly password: string = process.env.FM_PASSWORD || 'admin';
+  private readonly username: string = process.env.FM_USERNAME || 'Luis99';
+  private readonly password: string = process.env.FM_PASSWORD || '7257';
 
   private fmSessionToken: string = '';
 
   //metodo para obtener el token de FileMaker, se llama cada vez que se necesita hacer una consulta a FileMaker, si el token ya existe y es válido, se reutiliza, de lo contrario se obtiene uno nuevo
-  private async authFileMaker(): Promise<string> {
+  async authFileMaker(): Promise<string> {
     const url = `${this.fmServer}/fmi/data/vLatest/databases/${this.database}/sessions`;
     const credentials = Buffer.from(
       `${this.username}:${this.password}`,
@@ -32,6 +33,8 @@ export class FileMakerService {
     }
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const data = await response.json();
+
+    console.log(data);
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
     this.fmSessionToken = data.response.token;
     return this.fmSessionToken;

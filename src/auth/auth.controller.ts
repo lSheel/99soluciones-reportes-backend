@@ -16,6 +16,7 @@ export class AuthController {
     }
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const result = await this.authService.validateTokenFileMaker(token);
+    console.log(result);
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return result;
   }
