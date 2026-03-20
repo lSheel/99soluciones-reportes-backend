@@ -16,7 +16,7 @@ export class ReportsController {
   ) {
     console.log(
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      `El usuario ${req.user.nombre} con rol ${req.user.rol} está pidiendo el reporte de bancos`,
+      `El usuario ${req.user.nombre} con rol ${req.user.rol} está pidiendo el reporte de bancos, página ${page} con límite ${limit}`,
     );
 
     const pageNumber = parseInt(page, 10);

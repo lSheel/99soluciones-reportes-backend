@@ -15,6 +15,10 @@ export class AuthService {
     console.log(`Validando token: ${token}`);
 
     const tokenFileMaker = await this.fileMakerService.authFileMaker();
+
+    //AQUI SE CONSULTA EL TOKEN A FILEMAKER PARA VALIDARLO
+    //SI HAY RESPUESTA, SE PROCEDE A GENERAR EL JWT PROPIO PARA LA AUTENTICACION EN NESTJS
+
     console.log(`Token obtenido de FileMaker: ${tokenFileMaker}`);
     //simulacion de respuesta de filemaker
     const fmResponse = {

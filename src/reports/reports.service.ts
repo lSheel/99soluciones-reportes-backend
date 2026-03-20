@@ -9,7 +9,8 @@ import { cleanData } from './reports.mapper';
 export class ReportsService {
   constructor(private readonly fmService: FileMakerService) {}
   async fecthFromFileMaker(offSet: number, limit: number) {
-    const filtros = [{}];
+    // eslint-disable-next-line prettier/prettier
+    const filtros = [{ '_fecha': '01/01/2024...02/28/2024' }];
 
     const fmResponse = await this.fmService.findRecords(
       'ReporteBancos',
@@ -21,7 +22,7 @@ export class ReportsService {
     const cleanedData = cleanData(rawData);
 
     return {
-      data: cleanedData, //simulacion de datos, aquí se debería retornar el resultado real de la consulta a FileMaker
+      data: cleanedData,
       meta: {
         totalRecords: fmResponse.response.data.length,
         currentPage: Math.floor(offSet / limit) + 1,

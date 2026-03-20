@@ -40,7 +40,7 @@ export function cleanData(rawData: any[]) {
       const primerEgreso = egresos.length > 0 ? egresos[0] : null;
       cleanedRecord['montoEgreso'] = primerEgreso
         ? primerEgreso[
-            'contBanco.ITM|contEGRESO_|_x_bancoItmID::monto.MXN.applicadoGranTotal'
+            'contBanco.ITM|contEGRESO_|_x_bancoItmID::monto.MXN.ComplementadoGranTotal'
           ]
         : 0;
       cleanedRecord['estadoEgreso'] = primerEgreso
@@ -49,6 +49,7 @@ export function cleanData(rawData: any[]) {
           ]
         : 'N/A';
     }
+    return cleanedRecord;
   });
   return cleanedData;
 }
