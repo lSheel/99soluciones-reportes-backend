@@ -1,24 +1,25 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Injectable } from '@nestjs/common';
 import { FileMakerService } from '../filemaker/filemaker.service';
-import { cleanData } from './reports.mapper';
+import { cleanData, RawRecord } from './reports.mapper';
+interface BankReportResponse {
+  response: {
+    data: RawRecord[];
+  };
+}
 
 @Injectable()
 export class ReportsService {
   constructor(private readonly fmService: FileMakerService) {}
   async fecthFromFileMaker(offSet: number, limit: number) {
-    // eslint-disable-next-line prettier/prettier
-    const filtros = [{ '_fecha': '01/01/2024...02/28/2024' }];
+    const filtros = [{ _fecha: '01/01/2024...02/28/2024' }] as any[];
 
-    const fmResponse = await this.fmService.findRecords(
+    const fmResponse: BankReportResponse = (await this.fmService.findRecords(
       'ReporteBancos',
       filtros,
-      offSet + 1,
+      offSet + 1, // FileMaker usa 1-based index
       limit,
-    );
-    const rawData = fmResponse.response.data;
+    )) as BankReportResponse;
+    const rawData: RawRecord[] = fmResponse.response.data;
     const cleanedData = cleanData(rawData);
 
     return {

@@ -2,6 +2,15 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { FileMakerService } from '../filemaker/filemaker.service';
 
+export interface ValidateTokenResult {
+  accessToken: string;
+  user: {
+    id: number;
+    name: string;
+    role: string;
+  };
+}
+
 @Injectable()
 export class AuthService {
   constructor(
@@ -9,7 +18,7 @@ export class AuthService {
     private fileMakerService: FileMakerService,
   ) {}
 
-  async validateTokenFileMaker(token: string): Promise<any> {
+  async validateTokenFileMaker(token: string): Promise<ValidateTokenResult> {
     //BUSCAR Y VALIDAR EL TOKEN EN FILEMAKER
 
     console.log(`Validando token: ${token}`);

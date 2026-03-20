@@ -7,6 +7,10 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 
+interface JwtPayload {
+  tokenId: string;
+  secretyKey: string;
+}
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
   constructor(private jwtService: JwtService) {}
@@ -19,18 +23,18 @@ export class JwtAuthGuard implements CanActivate {
       throw new UnauthorizedException('Token no proporcionado');
     }
 
+    const secretKey = { secret: 'SECRET_KEY' };
+
     try {
       //SE VERIFICA EL TOKEN
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      const payload = await this.jwtService.verifyAsync(token, {
-        secret: 'SECRET_KEY',
-      });
-
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      const payload = await this.jwtService.verifyAsync<JwtPayload>(
+        token,
+        secretKey,
+      );
       request['user'] = payload; // Agregar la información del usuario al request para su uso posterior
-    } catch (error: any) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      throw new UnauthorizedException('Token inválido' + error.message);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : '';
+      throw new UnauthorizedException('Token inválido' + message);
     }
 
     return true;

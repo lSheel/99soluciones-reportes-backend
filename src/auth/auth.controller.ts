@@ -1,5 +1,5 @@
 import { Controller, Post, Body, HttpCode, HttpStatus } from '@nestjs/common';
-import { AuthService } from './auth.service';
+import { AuthService, ValidateTokenResult } from './auth.service';
 
 @Controller('auth')
 export class AuthController {
@@ -14,10 +14,9 @@ export class AuthController {
         message: 'Token es requerido',
       };
     }
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const result = await this.authService.validateTokenFileMaker(token);
-    console.log(result);
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+
+    const result: ValidateTokenResult =
+      await this.authService.validateTokenFileMaker(token);
     return result;
   }
 }

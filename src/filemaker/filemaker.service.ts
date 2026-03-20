@@ -1,5 +1,18 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 
+interface ValidateTokenResult {
+  response: {
+    token: string;
+  };
+}
+
+interface FindRecordsResult {
+  response: {
+    data: any[];
+    totalCount: number;
+  };
+}
+
 @Injectable()
 export class FileMakerService {
   //Variables para entorno .env
@@ -31,10 +44,8 @@ export class FileMakerService {
         'Error al autenticar con FileMaker',
       );
     }
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const data = await response.json();
+    const data = (await response.json()) as ValidateTokenResult;
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
     this.fmSessionToken = data.response.token;
     return this.fmSessionToken;
   }
@@ -45,7 +56,7 @@ export class FileMakerService {
     query: any[],
     offset: number = 1,
     limit: number = 50,
-  ): Promise<any> {
+  ): Promise<FindRecordsResult> {
     if (!this.fmSessionToken) {
       await this.authFileMaker();
     }
@@ -80,8 +91,8 @@ export class FileMakerService {
         body: JSON.stringify(body),
       });
     }
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const result = await response.json();
+
+    const result = (await response.json()) as FindRecordsResult;
     return result;
   }
 }
