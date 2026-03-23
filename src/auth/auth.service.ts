@@ -1,16 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { FileMakerService } from '../filemaker/filemaker.service';
-
-export interface ValidateTokenResult {
-  accessToken: string;
-  user: {
-    id: number;
-    name: string;
-    role: string;
-  };
-}
-
+import type { ValidateTokenResult } from '../interfaces/auth.interface';
 @Injectable()
 export class AuthService {
   constructor(

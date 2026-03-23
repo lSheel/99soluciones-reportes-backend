@@ -1,24 +1,8 @@
 import { Controller, Get, Query, UseGuards, Request } from '@nestjs/common';
 import { ReportsService } from './reports.service';
 import { JwtAuthGuard } from '../auth/guards/jwt.auth.guard';
-import { CleanedRecord } from './reports.mapper';
-
-interface responseBankReport {
-  data: CleanedRecord[];
-  meta: {
-    totalRecords: number;
-    currentPage: number;
-    limit: number;
-  };
-}
-
-interface requestUserReport {
-  user: {
-    nombre: string;
-    rol: string;
-  };
-}
-
+import type { RequestUserReport } from '../interfaces/filemaker.interface';
+import type { ResponseBankReport } from '../interfaces/reports/reports.interface';
 @Controller('reports')
 export class ReportsController {
   constructor(private readonly reportsService: ReportsService) {}
@@ -27,10 +11,10 @@ export class ReportsController {
   @UseGuards(JwtAuthGuard)
   @Get('bancos')
   async getBankReports(
-    @Request() req: requestUserReport,
+    @Request() req: RequestUserReport,
     @Query('page') page: string = '1',
     @Query('limit') limit: string = '50',
-  ): Promise<responseBankReport> {
+  ): Promise<ResponseBankReport> {
     console.log(
       `El usuario ${req.user.nombre} con rol ${req.user.rol} está pidiendo el reporte de bancos, página ${page} con límite ${limit}`,
     );

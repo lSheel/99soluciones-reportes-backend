@@ -6,11 +6,8 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
+import type { JwtPayload } from '../../interfaces/jwt.interface';
 
-interface JwtPayload {
-  tokenId: string;
-  secretyKey: string;
-}
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
   constructor(private jwtService: JwtService) {}
@@ -23,14 +20,11 @@ export class JwtAuthGuard implements CanActivate {
       throw new UnauthorizedException('Token no proporcionado');
     }
 
-    const secretKey = { secret: 'SECRET_KEY' };
-
     try {
       //SE VERIFICA EL TOKEN
-      const payload = await this.jwtService.verifyAsync<JwtPayload>(
-        token,
-        secretKey,
-      );
+      const payload = await this.jwtService.verifyAsync<JwtPayload>(token, {
+        secret: 'SECRET_KEY',
+      });
       request['user'] = payload; // Agregar la información del usuario al request para su uso posterior
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : '';

@@ -1,18 +1,8 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
-
-interface ValidateTokenResult {
-  response: {
-    token: string;
-  };
-}
-
-interface FindRecordsResult {
-  response: {
-    data: any[];
-    totalCount: number;
-  };
-}
-
+import type {
+  GetTokenResponse,
+  FindRecordsResult,
+} from '../interfaces/filemaker.interface';
 @Injectable()
 export class FileMakerService {
   //Variables para entorno .env
@@ -44,7 +34,7 @@ export class FileMakerService {
         'Error al autenticar con FileMaker',
       );
     }
-    const data = (await response.json()) as ValidateTokenResult;
+    const data = (await response.json()) as GetTokenResponse;
 
     this.fmSessionToken = data.response.token;
     return this.fmSessionToken;

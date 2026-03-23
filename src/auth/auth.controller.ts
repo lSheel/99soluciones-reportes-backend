@@ -1,5 +1,6 @@
 import { Controller, Post, Body, HttpCode, HttpStatus } from '@nestjs/common';
-import { AuthService, ValidateTokenResult } from './auth.service';
+import { AuthService } from './auth.service';
+import type { ValidateTokenResult } from '../interfaces/auth.interface';
 
 @Controller('auth')
 export class AuthController {

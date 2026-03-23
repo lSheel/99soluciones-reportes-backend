@@ -1,17 +1,5 @@
-export interface RawRecord {
-  recordId: string;
-  fieldData: Record<string, unknown>;
-  portalData: Record<string, unknown>;
-}
-
-export interface CleanedRecord {
-  idRegistro: string;
-  fecha: string;
-  formaPago: string;
-  concepto: string;
-  abono: number;
-  cargo: number;
-}
+import { RawRecord } from '../interfaces/reports/reports.interface';
+import { ReportBankRecord } from '../interfaces/reports/report.class.interface';
 
 function getString(value: unknown): string {
   return typeof value === 'string' ? value : '';
@@ -22,13 +10,13 @@ function getNumber(value: unknown): number {
   return isNaN(num) ? 0 : num;
 }
 
-export function cleanData(rawData: RawRecord[]) {
+export function cleanData(rawData: RawRecord[]): ReportBankRecord[] {
   const cleanedData = rawData.map((record: RawRecord) => {
     const fields = record.fieldData;
     const portals = record.portalData;
 
     // Extraemos y limpiamos datos de banco.ITM
-    const cleanedRecord: CleanedRecord = {
+    const cleanedRecord: ReportBankRecord = {
       idRegistro: record.recordId,
       fecha: getString(fields['_fecha']),
       formaPago: getString(fields['_idu_formaPago|v0.22.1']),
