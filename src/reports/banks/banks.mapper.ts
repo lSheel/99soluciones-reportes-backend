@@ -1,5 +1,5 @@
-import { RawRecord } from '../interfaces/reports/reports.interface';
-import { ReportBankRecord } from '../interfaces/reports/report.class.interface';
+import type { RawRecord } from '../../interfaces/reports/reports.interface';
+import type { ReportBankRecord } from '../../interfaces/reports/report.class.interface';
 
 function getString(value: unknown): string {
   return typeof value === 'string' ? value : '';
