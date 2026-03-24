@@ -55,7 +55,7 @@ export class FileMakerService {
     if (query.length === 1 && Object.keys(query[0]).length === 0) {
       query = [
         {
-          _fecha: '01/01/2026...02/28/2026',
+          'contBanco.ITM::_fecha': '01/01/2026...02/28/2026',
         },
       ];
     }

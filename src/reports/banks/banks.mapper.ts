@@ -19,10 +19,10 @@ export function cleanData(rawData: RawRecord[]): ReportBankRecord[] {
     const cleanedRecord: ReportBankRecord = {
       idRegistro: record.recordId,
       fecha: getString(fields['_fecha']),
-      formaPago: getString(fields['_idu_formaPago|v0.22.1']),
-      concepto: getString(fields['mConceptoDeBancoTexto|v0.20.0']),
-      abono: getNumber(fields['monto.ORIG.abono|v0.22.1']),
-      cargo: getNumber(fields['monto.ORIG.cargo|v0.22.1']),
+      formaPago: getString(fields['_idu_formaPago_v0_22_1']),
+      concepto: getString(fields['mConceptoDeBancoTexto_v0_20_0']),
+      abono: getNumber(fields['monto_ORIG_abono_v0_22_1']),
+      cargo: getNumber(fields['monto_ORIG_cargo_v0_22_1']),
     };
 
     const ingresos = Array.isArray(

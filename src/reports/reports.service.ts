@@ -40,6 +40,7 @@ export class ReportService {
     globalSearch: string,
     filterModel: filterBankModel[],
   ) {
+    console.log(filterModel);
     const fmQuery = this.makeFilterString(globalSearch, filterModel);
 
     const fmResponse: FindRecordsResult = await this.fmService.findRecords(
@@ -81,11 +82,11 @@ export class ReportService {
   ): any[] {
     // Implementation for creating filter string
     const fieldMapping = {
-      fecha: '_fecha',
-      formaPago: '_idu_formaPago|v0.22.1',
-      concepto: 'mConceptoDeBancoTexto|v0.20.0',
-      abono: 'monto.ORIG.abono|v0.22.1',
-      cargo: 'monto.ORIG.cargo|v0.22.1',
+      fecha: 'contBanco.ITM::_fecha',
+      formaPago: 'contBanco.ITM::_idu_formaPago_v0_22_1',
+      concepto: 'contBanco.ITM::mConceptoDeBancoTexto_v0_20_0',
+      abono: 'monto_ORIG_abono_v0_22_1',
+      cargo: 'monto_ORIG_cargo_v0_22_1',
     };
 
     const baseConditions: FinalQueryBankReport = {};
@@ -102,11 +103,11 @@ export class ReportService {
             baseConditions[fmField] = filterInfo.filter;
           } else if (filterInfo.filterType === 'number') {
             if (filterInfo.type === 'greatherThan')
-              baseConditions[fmField] = `>${filterInfo.value}`;
+              baseConditions[fmField] = `>${filterInfo.filter}`;
             else if (filterInfo.type === 'lessThan')
-              baseConditions[fmField] = `<${filterInfo.value}`;
-            else if (filterInfo.type === 'equal')
-              baseConditions[fmField] = `=${filterInfo.value}`;
+              baseConditions[fmField] = `<${filterInfo.filter}`;
+            else if (filterInfo.type === 'equals')
+              baseConditions[fmField] = `=${filterInfo.filter}`;
           }
         }
       });
@@ -116,8 +117,8 @@ export class ReportService {
 
     if (globalSearch && globalSearch.trim() !== '') {
       const fieldToSearch = [
-        'mConceptoDeBancoTexto|v0.20.0',
-        '_idu_formaPago|v0.22.1',
+        'contBanco.ITM::mConceptoDeBancoTexto_v0_20_0',
+        'contBanco.ITM::_idu_formaPago_v0_22_1',
       ];
 
       fieldToSearch.forEach((field) => {
