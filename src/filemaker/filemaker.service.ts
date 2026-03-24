@@ -52,12 +52,21 @@ export class FileMakerService {
     }
 
     const url = `${this.fmServer}/fmi/data/vLatest/databases/${this.database}/layouts/${layout}/_find`;
+    if (query.length === 1 && Object.keys(query[0]).length === 0) {
+      query = [
+        {
+          _fecha: '01/01/2026...02/28/2026',
+        },
+      ];
+    }
 
     const body = {
       query,
       offset,
       limit,
     };
+
+    console.log(body);
 
     let response = await fetch(url, {
       method: 'POST',

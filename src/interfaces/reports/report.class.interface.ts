@@ -5,17 +5,37 @@ export interface ReportBankRecord {
   concepto: string;
   abono: number;
   cargo: number;
-  montoIngreso?: number;
   estadoIngreso?: string;
-  montoEgreso?: number;
   estadoEgreso?: string;
 }
 
+export interface filterModel {
+  value: any;
+  filterType: string;
+  type: string;
+  filter: string | number;
+}
+
 export interface filterBankModel {
-  filterType: string | undefined;
+  fecha?: filterModel;
+  formaPago?: filterModel;
+  concepto?: filterModel;
+  abono?: filterModel;
+  cargo?: filterModel;
+  estadoIngreso?: filterModel;
+  estadoEgreso?: filterModel;
+}
+
+export interface QueryBankReport {
   fecha?: string;
   formaPago?: string;
   concepto?: string;
   abono?: number;
   cargo?: number;
+  estadoEgreso?: string;
+  estadoIngreso?: string;
+}
+
+export interface FinalQueryBankReport extends QueryBankReport {
+  [key: string]: string | number | undefined;
 }
