@@ -66,8 +66,6 @@ export class FileMakerService {
       limit,
     };
 
-    console.log(body);
-
     let response = await fetch(url, {
       method: 'POST',
       headers: {

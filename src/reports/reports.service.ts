@@ -1,4 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import type { Cache } from 'cache-manager';
 import { FileMakerService } from '../filemaker/filemaker.service';
 import { cleanData } from './banks/banks.mapper';
 import type { FindRecordsResult } from '../interfaces/filemaker.interface';
@@ -7,10 +9,14 @@ import type {
   filterModel,
   FinalQueryBankReport,
 } from '../interfaces/reports/report.class.interface';
+import { ResponseBankReport } from '../interfaces/reports/reports.interface';
 
 @Injectable()
 export class ReportService {
-  constructor(private readonly fmService: FileMakerService) {}
+  constructor(
+    private readonly fmService: FileMakerService,
+    @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
+  ) {}
   async fecthFromFileMaker(offSet: number, limit: number) {
     const filtros = [{ _fecha: '01/01/2024...02/28/2024' }] as any[];
 
@@ -39,8 +45,15 @@ export class ReportService {
     globalSearch: string,
     filterModel: filterBankModel[],
     dateRange: { startDate: string; endDate: string },
-  ) {
-    console.log(filterModel);
+  ): Promise<ResponseBankReport> {
+    const cacheKey = `bancos_${offSet}_${limit}_${globalSearch}_${JSON.stringify(filterModel)}_${JSON.stringify(dateRange)}`;
+    const cachedData =
+      await this.cacheManager.get<ResponseBankReport>(cacheKey);
+    if (cachedData) {
+      console.log(`Cache hit for key: ${cacheKey}`);
+      return cachedData;
+    }
+
     const fmQuery = this.makeFilterString(globalSearch, filterModel, dateRange);
 
     const fmResponse: FindRecordsResult = await this.fmService.findRecords(
@@ -49,8 +62,6 @@ export class ReportService {
       offSet + 1, // FileMaker usa 1-based index
       limit,
     );
-    console.log(fmResponse);
-
     const rawData = fmResponse.response.data;
 
     if (!rawData || rawData.length === 0) {
@@ -66,7 +77,7 @@ export class ReportService {
 
     const cleanedData = cleanData(rawData);
 
-    return {
+    const response = {
       data: cleanedData,
       meta: {
         totalRecords: fmResponse.response.data.length,
@@ -74,6 +85,10 @@ export class ReportService {
         limit: Math.ceil(fmResponse.response.data.length / limit),
       },
     };
+
+    await this.cacheManager.set(cacheKey, response);
+
+    return response;
   }
 
   private makeFilterString(
@@ -81,7 +96,6 @@ export class ReportService {
     filterModel: filterBankModel[],
     dateRange: { startDate: string; endDate: string },
   ): FinalQueryBankReport[] {
-    // Implementation for creating filter string
     const fieldMapping = {
       fecha: 'contBanco.ITM::_fecha',
       formaPago: 'contBanco.ITM::_idu_formaPago_v0_22_1',
