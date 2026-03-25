@@ -7,7 +7,6 @@ import type {
   filterModel,
   FinalQueryBankReport,
 } from '../interfaces/reports/report.class.interface';
-//import { filterBankModel } from '../../interfaces/reports/report.class.interface';
 
 @Injectable()
 export class ReportService {
@@ -39,9 +38,10 @@ export class ReportService {
     limit: number,
     globalSearch: string,
     filterModel: filterBankModel[],
+    dateRange: { startDate: string; endDate: string },
   ) {
     console.log(filterModel);
-    const fmQuery = this.makeFilterString(globalSearch, filterModel);
+    const fmQuery = this.makeFilterString(globalSearch, filterModel, dateRange);
 
     const fmResponse: FindRecordsResult = await this.fmService.findRecords(
       'ReporteBancos',
@@ -79,7 +79,8 @@ export class ReportService {
   private makeFilterString(
     globalSearch: string,
     filterModel: filterBankModel[],
-  ): any[] {
+    dateRange: { startDate: string; endDate: string },
+  ): FinalQueryBankReport[] {
     // Implementation for creating filter string
     const fieldMapping = {
       fecha: 'contBanco.ITM::_fecha',
@@ -90,6 +91,22 @@ export class ReportService {
     };
 
     const baseConditions: FinalQueryBankReport = {};
+
+    let formatDate: (dateISO: string) => string = () => '';
+
+    if (dateRange.startDate && dateRange.endDate) {
+      formatDate = (dateISO: string) => {
+        if (!dateISO) return '';
+        const [year, month, day] = dateISO.split('-');
+        return `${month}/${day}/${year}`;
+      };
+    }
+
+    const fmStartDate = formatDate(dateRange.startDate);
+    const fmEndDate = formatDate(dateRange.endDate);
+
+    if (fmStartDate && fmEndDate)
+      baseConditions['contBanco.ITM::_fecha'] = `${fmStartDate}...${fmEndDate}`;
 
     if (filterModel && Object.keys(filterModel).length > 0) {
       Object.keys(filterModel).forEach((key) => {

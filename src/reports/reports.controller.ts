@@ -26,6 +26,11 @@ export class ReportsController {
     @Query('limit') limit: string = '50',
     @Body('globalSearch') globalSearch: string = '',
     @Body('filterModel') filterModel: filterBankModel[],
+    @Body('dateRange')
+    dateRange: { startDate: string; endDate: string } = {
+      startDate: '',
+      endDate: '',
+    },
   ): Promise<ResponseBankReport> {
     // console.log(
     //   `El usuario ${req.user.nombre} con rol ${req.user.rol} está pidiendo el reporte de bancos, página ${page} con límite ${limit}`,
@@ -39,6 +44,7 @@ export class ReportsController {
       limitNumber,
       globalSearch,
       filterModel,
+      dateRange,
     );
     return response;
   }
