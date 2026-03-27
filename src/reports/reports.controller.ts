@@ -32,9 +32,6 @@ export class ReportsController {
       endDate: '',
     },
   ): Promise<ResponseBankReport> {
-    // console.log(
-    //   `El usuario ${req.user.nombre} con rol ${req.user.rol} está pidiendo el reporte de bancos, página ${page} con límite ${limit}`,
-    // );
     const pageNumber = parseInt(page, 10);
     const limitNumber = parseInt(limit, 10);
     const offSet = (pageNumber - 1) * limitNumber;
