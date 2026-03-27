@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ReportsController } from './reports.controller';
-import { ReportService } from './reports.service';
+import { BankReportService } from './reports.service';
 import { CacheModule } from '@nestjs/cache-manager';
 
 @Module({
@@ -11,6 +11,6 @@ import { CacheModule } from '@nestjs/cache-manager';
     }),
   ],
   controllers: [ReportsController],
-  providers: [ReportService],
+  providers: [BankReportService],
 })
 export class ReportsModule {}

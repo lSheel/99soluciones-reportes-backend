@@ -6,16 +6,16 @@ import {
   Post,
   Body,
 } from '@nestjs/common';
-import { ReportService } from './reports.service';
+import { BankReportService } from './reports.service';
 import { JwtAuthGuard } from '../auth/guards/jwt.auth.guard';
 //import type { RequestUserReport } from '../interfaces/filemaker.interface';
 import type { ResponseBankReport } from '../interfaces/reports/reports.interface';
-import { filterBankModel } from '../interfaces/reports/report.class.interface';
+import type { FilterBankModel } from '../interfaces/reports/report.class.interface';
 //import type { filterBankModel } from '../interfaces/reports/report.class.interface';
 
 @Controller('reports')
 export class ReportsController {
-  constructor(private readonly ReportService: ReportService) {}
+  constructor(private readonly ReportService: BankReportService) {}
 
   //EndPoint POST
   @UseGuards(JwtAuthGuard)
@@ -25,7 +25,7 @@ export class ReportsController {
     @Query('page') page: string = '1',
     @Query('limit') limit: string = '50',
     @Body('globalSearch') globalSearch: string = '',
-    @Body('filterModel') filterModel: filterBankModel[],
+    @Body('filterModel') filterModel: FilterBankModel,
     @Body('dateRange')
     dateRange: { startDate: string; endDate: string } = {
       startDate: '',
@@ -39,13 +39,12 @@ export class ReportsController {
     const limitNumber = parseInt(limit, 10);
     const offSet = (pageNumber - 1) * limitNumber;
 
-    const response = await this.ReportService.fecthFromFileMakerWithFilters(
+    return this.ReportService.fectFromFileMakerWithFilters(
       offSet,
       limitNumber,
       globalSearch,
       filterModel,
       dateRange,
     );
-    return response;
   }
 }

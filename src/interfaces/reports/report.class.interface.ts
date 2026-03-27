@@ -9,21 +9,21 @@ export interface ReportBankRecord {
   estadoEgreso?: string;
 }
 
-export interface filterModel {
+export interface FilterModel {
   value: any;
   filterType: string;
   type: string;
   filter: string | number;
 }
 
-export interface filterBankModel {
-  fecha?: filterModel;
-  formaPago?: filterModel;
-  concepto?: filterModel;
-  abono?: filterModel;
-  cargo?: filterModel;
-  estadoIngreso?: filterModel;
-  estadoEgreso?: filterModel;
+export interface FilterBankModel {
+  fecha?: FilterModel;
+  formaPago?: FilterModel;
+  concepto?: FilterModel;
+  abono?: FilterModel;
+  cargo?: FilterModel;
+  estadoIngreso?: FilterModel;
+  estadoEgreso?: FilterModel;
 }
 
 export interface QueryBankReport {
