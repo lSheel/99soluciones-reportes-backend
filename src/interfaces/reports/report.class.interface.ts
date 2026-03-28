@@ -1,3 +1,5 @@
+import { FilterModel } from './reports.interface';
+
 export interface ReportBankRecord {
   idRegistro: string;
   fecha: string;
@@ -8,14 +10,6 @@ export interface ReportBankRecord {
   estadoIngreso?: string;
   estadoEgreso?: string;
 }
-
-export interface FilterModel {
-  value: any;
-  filterType: string;
-  type: string;
-  filter: string | number;
-}
-
 export interface FilterBankModel {
   fecha?: FilterModel;
   formaPago?: FilterModel;
@@ -24,18 +18,4 @@ export interface FilterBankModel {
   cargo?: FilterModel;
   estadoIngreso?: FilterModel;
   estadoEgreso?: FilterModel;
-}
-
-export interface QueryBankReport {
-  fecha?: string;
-  formaPago?: string;
-  concepto?: string;
-  abono?: number;
-  cargo?: number;
-  estadoEgreso?: string;
-  estadoIngreso?: string;
-}
-
-export interface FinalQueryBankReport extends QueryBankReport {
-  [key: string]: string | number | undefined;
 }

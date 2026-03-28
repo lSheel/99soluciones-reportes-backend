@@ -4,13 +4,11 @@ import type { Cache } from 'cache-manager';
 import { FileMakerService } from '../filemaker/filemaker.service';
 import { cleanData } from './banks/banks.mapper';
 import type { FilterBankModel } from '../interfaces/reports/report.class.interface';
-import { ResponseBankReport } from '../interfaces/reports/reports.interface';
 import { BaseReportService } from './base-report.service';
 import { ReportBankRecord } from '../interfaces/reports/report.class.interface';
 
 @Injectable()
 export class BankReportService extends BaseReportService<
-  ResponseBankReport,
   FilterBankModel,
   ReportBankRecord
 > {
@@ -19,8 +17,8 @@ export class BankReportService extends BaseReportService<
     @Inject(CACHE_MANAGER) cacheManager: Cache,
   ) {
     super(fmService, cacheManager, {
-      layoutName: 'ReporteBancos',
-      cachePrefix: 'bancos_',
+      layoutName: 'apiExport_bancoITM',
+      cachePrefix: 'bancosITM_',
       dataField: 'contBanco.ITM::_fecha',
       fieldMapping: {
         fecha: 'contBanco.ITM::_fecha',
@@ -34,7 +32,6 @@ export class BankReportService extends BaseReportService<
         'contBanco.ITM::_idu_formaPago_v0_22_1',
       ],
       cleanDataFunction: cleanData,
-      filterModel: {} as FilterBankModel,
     });
   }
 }

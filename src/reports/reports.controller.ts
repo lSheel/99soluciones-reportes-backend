@@ -9,13 +9,16 @@ import {
 import { BankReportService } from './reports.service';
 import { JwtAuthGuard } from '../auth/guards/jwt.auth.guard';
 //import type { RequestUserReport } from '../interfaces/filemaker.interface';
-import type { ResponseBankReport } from '../interfaces/reports/reports.interface';
-import type { FilterBankModel } from '../interfaces/reports/report.class.interface';
+import type {
+  FilterBankModel,
+  ReportBankRecord,
+} from '../interfaces/reports/report.class.interface';
+import { PaginatedResponse } from './base-report.service';
 //import type { filterBankModel } from '../interfaces/reports/report.class.interface';
 
 @Controller('reports')
 export class ReportsController {
-  constructor(private readonly ReportService: BankReportService) {}
+  constructor(private readonly reportService: BankReportService) {}
 
   //EndPoint POST
   @UseGuards(JwtAuthGuard)
@@ -25,19 +28,19 @@ export class ReportsController {
     @Query('page') page: string = '1',
     @Query('limit') limit: string = '50',
     @Body('globalSearch') globalSearch: string = '',
-    @Body('filterModel') filterModel: FilterBankModel,
+    @Body('filterModel') filterModel: FilterBankModel = {},
     @Body('dateRange')
     dateRange: { startDate: string; endDate: string } = {
       startDate: '',
       endDate: '',
     },
-  ): Promise<ResponseBankReport> {
+  ): Promise<PaginatedResponse<ReportBankRecord>> {
     const pageNumber = parseInt(page, 10);
     const limitNumber = parseInt(limit, 10);
-    const offSet = (pageNumber - 1) * limitNumber;
+    const offset = (pageNumber - 1) * limitNumber;
 
-    return this.ReportService.fectFromFileMakerWithFilters(
-      offSet,
+    return this.reportService.fetchFromFileMakerWithFilters(
+      offset,
       limitNumber,
       globalSearch,
       filterModel,

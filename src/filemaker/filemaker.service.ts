@@ -51,7 +51,10 @@ export class FileMakerService {
       await this.authFileMaker();
     }
 
-    const url = `${this.fmServer}/fmi/data/vLatest/databases/${this.database}/layouts/${layout}/_find`;
+    const url = encodeURI(
+      `${this.fmServer}/fmi/data/vLatest/databases/${this.database}/layouts/${layout}/_find`,
+    );
+
     if (query.length === 1 && Object.keys(query[0]).length === 0) {
       query = [
         {
@@ -65,6 +68,9 @@ export class FileMakerService {
       offset,
       limit,
     };
+
+    console.log(`URL ${url}`);
+    console.log(`Enviando consulta a FileMaker: ${JSON.stringify(body)}`);
 
     let response = await fetch(url, {
       method: 'POST',
